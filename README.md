@@ -1,2 +1,1 @@
-# CG-Assign-2
-Assignment #2
+ Webgl-boilerplate for Graphics Spring 2021
