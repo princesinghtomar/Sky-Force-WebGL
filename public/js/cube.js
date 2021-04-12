@@ -1,10 +1,6 @@
-import * as THREE from './three.js/build/three.module.js';
-
 var cubeRotation = 0.0;
 
 main();
-
-console.log(prince)
 
 //
 // Start here
