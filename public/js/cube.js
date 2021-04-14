@@ -1,5 +1,13 @@
 var cubeRotation = 0.0;
 
+document.addEventListener('keydown', keyDownHandler, false);
+document.addEventListener('keyup', keyUpHandler, false);
+var rightPressed = false;
+var leftPressed = false;
+var upPressed = false;
+var downPressed = false;
+translate_matrix = [0.0,0.0,-4.0]
+
 main();
 
 //
@@ -103,10 +111,10 @@ function initBuffers(gl) {
 
   const positions = [
     // Front face
-    -1.0, -1.0,  1.0,
-     1.0, -1.0,  1.0,
-     1.0,  1.0,  1.0,
-    -1.0,  1.0,  1.0,
+    -0.1, -0.1,  0.1,
+     0.1, -0.1,  0.1,
+     0.1,  0.1,  0.1,
+    -0.1,  0.1,  0.1,
   ];
 
   // Now pass the list of positions into WebGL to build the
@@ -206,7 +214,7 @@ function drawScene(gl, programInfo, buffers, deltaTime) {
 
   mat4.translate(modelViewMatrix,     // destination matrix
                  modelViewMatrix,     // matrix to translate
-                 [-0.0, 0.0, -6.0]);  // amount to translate
+                 translate_matrix);  // amount to translate
 
   //Write your code to Rotate the cube here//
 
@@ -331,4 +339,51 @@ function loadShader(gl, type, source) {
   }
 
   return shader;
+}
+
+function keyDownHandler(event) {
+  if(event.keyCode == 39) {
+      rightPressed = true;
+      translate_matrix[0] += 0.1;
+      // if(translate_matrix[0] > 2.20){
+      //   translate_matrix[0] = 2.20 
+      // }
+  }
+  else if(event.keyCode == 37) {
+      leftPressed = true;
+      translate_matrix[0] -= 0.1;
+      // if(translate_matrix[0] < -2.20){
+      //   translate_matrix[0] = -2.20 
+      // }
+  }
+  if(event.keyCode == 40) {
+    downPressed = true;
+    translate_matrix[1] -= 0.1;
+    if(translate_matrix[1] < -1.5){
+      translate_matrix[1] = -1.50 
+    }
+  }
+  else if(event.keyCode == 38) {
+    upPressed = true;
+    translate_matrix[1] += 0.1;
+    // if(translate_matrix[0] > 1.50){
+    //   translate_matrix[0] = 1.50 
+    // }
+  }
+  console.log(translate_matrix)
+}
+
+function keyUpHandler(event) {
+  if(event.keyCode == 39) {
+      rightPressed = false;
+  }
+  else if(event.keyCode == 37) {
+      leftPressed = false;
+  }
+  if(event.keyCode == 40) {
+    downPressed = false;
+  }
+  else if(event.keyCode == 38) {
+    upPressed = false;
+  }
 }
