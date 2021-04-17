@@ -111,10 +111,14 @@ function initBuffers(gl) {
 
   const positions = [
     // Front face
-    -0.1, -0.1,  0.1,
-     0.1, -0.1,  0.1,
-     0.1,  0.1,  0.1,
-    -0.1,  0.1,  0.1,
+     0.1,  0.1,  0.1,// 0
+    -0.1,  0.1,  0.1,// 1
+     0.1, -0.1,  0.1,// 2
+    -0.1, -0.1,  0.1,// 3
+     0.1,  0.1, -0.1,// 4
+    -0.1,  0.1, -0.1,// 5
+     0.1, -0.1, -0.1,// 6
+    -0.1, -0.1, -0.1,// 7
   ];
 
   // Now pass the list of positions into WebGL to build the
@@ -156,7 +160,18 @@ function initBuffers(gl) {
   // position.
 
   const indices = [
-    0,  1,  2,      0,  2,  3,    // front
+    7,6,4,
+    4,5,7,
+    3,2,0,
+    0,1,3,
+    1,5,7,
+    7,3,1,
+    0,4,6,
+    6,2,0,
+    7,6,2,
+    2,3,7,
+    5,4,0,
+    0,1,5
   ];
 
   // Now send the element array to GL
