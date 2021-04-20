@@ -251,7 +251,6 @@ function drawScene(gl, programInfo, buffers, deltaTime) {
 
     // Now move the drawing position a bit to where we want to
     // start drawing the square.
-    console.log(translate_matrix)
     mat4.translate(modelViewMatrix,     // destination matrix
         modelViewMatrix,     // matrix to translate
         translate_matrix);  // amount to translate
