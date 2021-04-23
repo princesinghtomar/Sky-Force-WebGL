@@ -1,5 +1,6 @@
 // We need 3 things everytime we use Three.js
 // Scene + Camera + Renderer
+pi = Math.PI
 const scene = new THREE.Scene()
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
 const renderer = new THREE.WebGLRenderer({ antialias: true })
@@ -19,22 +20,8 @@ window.addEventListener('resize', () => {
 	camera.updateProjectionMatrix()
 })
 
-// basic cube
-var geometry = new THREE.BoxGeometry(1, 1, 1)
-var material = new THREE.MeshStandardMaterial({ color: 0xff0051, flatShading: true, metalness: 0, roughness: 1 })
-var cube = new THREE.Mesh(geometry, material)
-scene.add(cube)
-
-// wireframe cube
-var geometry = new THREE.BoxGeometry(3, 3, 3)
-var material = new THREE.MeshBasicMaterial({
-	color: "#dadada", wireframe: true, transparent: true
-})
-var wireframeCube = new THREE.Mesh(geometry, material)
-scene.add(wireframeCube)
-
 // ambient light
-var ambientLight = new THREE.AmbientLight(0xffffff, 0.2)
+var ambientLight = new THREE.AmbientLight(0xff8000, 0.2)
 scene.add(ambientLight)
 
 // point light
@@ -43,9 +30,13 @@ pointLight.position.set(25, 50, 25);
 scene.add(pointLight);
 
 const loader = new GLTFLoader();
-loader.load( '../models/spaceship3.glb', function ( gltf ) {
-	
-	scene.add( gltf.scene );
+loader.load( '../models/spaceship3.glb', function ( gltf1 ) {
+	playership = gltf1
+	console.log(playership)
+	gltf1.scene.position.set(0,-3,0)
+	gltf1.scene.rotation.set(pi/2,pi/2,-pi/2)
+	gltf1.scene.scale.set(0.3,0.3,0.3)
+	scene.add( gltf1.scene );
 
 }, undefined, function ( error ) {
 
@@ -55,10 +46,7 @@ loader.load( '../models/spaceship3.glb', function ( gltf ) {
 
 function animate() {
 	requestAnimationFrame(animate)
-	cube.rotation.x += 0.04;
-	cube.rotation.y += 0.04;
-	wireframeCube.rotation.x -= 0.01;
-	wireframeCube.rotation.y -= 0.01;
+	// playership.scene.position.y -= 0.01
 	renderer.render(scene, camera)
 }
 animate()
