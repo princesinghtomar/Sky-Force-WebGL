@@ -6,7 +6,7 @@ const renderer = new THREE.WebGLRenderer({ antialias: true })
 
 renderer.setSize(window.innerWidth, window.innerHeight)
 // sets renderer background color
-renderer.setClearColor("#222222")
+renderer.setClearColor("#000000")
 document.body.appendChild(renderer.domElement)
 camera.position.z = 5
 
@@ -20,18 +20,26 @@ window.addEventListener('resize', () => {
 })
 
 // basic cube
-var geometry = new THREE.BoxGeometry(1, 1, 1)
-var material = new THREE.MeshStandardMaterial({ color: 0xff0051, flatShading: true, metalness: 0, roughness: 1 })
-var cube = new THREE.Mesh(geometry, material)
-scene.add(cube)
+// var geometry = new THREE.BoxGeometry(1, 1, 1)
+// var material = new THREE.MeshStandardMaterial({ color: 0xff0051, flatShading: true, metalness: 0, roughness: 1 })
+// var cube = new THREE.Mesh(geometry, material)
+// scene.add(cube)
 
-// wireframe cube
-var geometry = new THREE.BoxGeometry(3, 3, 3)
-var material = new THREE.MeshBasicMaterial({
-    color: "#dadada", wireframe: true, transparent: true
-})
-var wireframeCube = new THREE.Mesh(geometry, material)
-scene.add(wireframeCube)
+// // wireframe cube
+// var geometry = new THREE.BoxGeometry(3, 3, 3)
+// var material = new THREE.MeshBasicMaterial({
+//     color: "#dadada", wireframe: true, transparent: true
+// })
+// var wireframeCube = new THREE.Mesh(geometry, material)
+// scene.add(wireframeCube)
+
+let loader = new THREE.GLTFLoader();
+loader.load('../models/spaceship3.glf', function(gltf){
+  car = gltf.scene.children[0];
+  car.scale.set(0.5,0.5,0.5);
+  scene.add(gltf.scene);
+  animate();
+});
 
 // ambient light
 var ambientLight = new THREE.AmbientLight(0xffffff, 0.2)
@@ -45,10 +53,10 @@ scene.add(pointLight);
 
 function animate() {
     requestAnimationFrame(animate)
-    cube.rotation.x += 0.04;
-    cube.rotation.y += 0.04;
-    wireframeCube.rotation.x -= 0.01;
-    wireframeCube.rotation.y -= 0.01;
+    // cube.rotation.x += 0.04;
+    // cube.rotation.y += 0.04;
+    // wireframeCube.rotation.x -= 0.01;
+    // wireframeCube.rotation.y -= 0.01;
     renderer.render(scene, camera)
 }
 animate()

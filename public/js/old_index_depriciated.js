@@ -68,7 +68,7 @@ function init() {
     const loader = new THREE.GLTFLoader();
 
     loader.load(
-        "./blender-file/untitled.glb",
+        "../models/spaceship3.glb",
         function(gltf) {
             scene.add(gltf.scene);
             obj = gltf.scene;
