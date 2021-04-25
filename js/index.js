@@ -1,25 +1,29 @@
 // Some Important Variables and Functins
-pi = Math.PI
+pi = Math.PI;
 document.addEventListener('keydown', keyDownHandler, false);
 document.addEventListener('keyup', keyUpHandler, false);
-var rightPressed = false;
-var leftPressed = false;
-var upPressed = false;
-var downPressed = false;
-position_matrix = [0, -3, 0];
-rotation_matrix = [pi / 2, pi / 2, -pi / 2]
+player_missiles = new Array();
+star_array = new Array();
+var health = 100;
+var score = 0;
+
+// var keys = {};
+// ... Later task to inprove to multiple key pressing ...
 
 // Scene + Camera + Renderer
-// We need 3 things everytime we use Three.js
 const scene = new THREE.Scene()
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
 const renderer = new THREE.WebGLRenderer({ antialias: true })
-
 renderer.setSize(window.innerWidth, window.innerHeight)
 // sets renderer background color
 renderer.setClearColor("#000000")
 document.body.appendChild(renderer.domElement)
-camera.position.z = 5
+camera.position.z = 10
+camera.position.y = -3
+
+// scene background 
+var texture = new THREE.TextureLoader().load( "textures/461223110.jpg" );
+scene.background = texture;
 
 // resize canvas on resize window
 window.addEventListener('resize', () => {
@@ -29,6 +33,7 @@ window.addEventListener('resize', () => {
 	camera.aspect = width / height
 	camera.updateProjectionMatrix()
 })
+console.log(renderer)
 
 // ambient light
 var ambientLight = new THREE.AmbientLight(0xff8000, 0.2)
@@ -41,11 +46,11 @@ scene.add(pointLight);
 
 const loader = new GLTFLoader();
 loader.load('../models/spaceship3.glb', function (gltf1) {
-	playership = gltf1
-	console.log(playership)
-	gltf1.scene.position.set(0, -3, 0)
-	gltf1.scene.rotation.set(pi / 2, pi / 2, -pi / 2)
-	gltf1.scene.scale.set(0.3, 0.3, 0.3)
+	playership = gltf1;
+	console.log(playership);
+	gltf1.scene.position.set(0, -3, 0);
+	gltf1.scene.rotation.set(pi / 2, pi / 2, 0);
+	gltf1.scene.scale.set(0.3, 0.3, 0.3);
 	scene.add(gltf1.scene);
 
 }, undefined, function (error) {
@@ -54,57 +59,115 @@ loader.load('../models/spaceship3.glb', function (gltf1) {
 
 });
 
+function create_missiles() {
+	const pmloader = new GLTFLoader();
+	pmloader.load('../models/rocket.glb', function (gltf) {
+		player_missiles.push(gltf);
+		console.log("Palyer Missiles : " + String(gltf));
+		gltf.scene.position.set(playership.scene.position.x, playership.scene.position.y + 0.7, 0);
+		gltf.scene.rotation.set(0, 0, 0);
+		gltf.scene.scale.set(0.03, 0.03, 0.03);
+		scene.add(gltf.scene);
+	}, undefined, function (error) {
+		console.error(error);
+	});
+}
+
+// ... Change stars model ... 
+// ... Make Stars appear after Killing of an Enemy ...
+function create_stars(){
+	const stloader = new GLTFLoader();
+	stloader.load("../models/laser.glb",function (gltf) {
+		star_array.push(gltf);
+		console.log("Stars : " + String(gltf));
+		gltf.scene.scale.set(0.2,0.2,0.2);
+		gltf.scene.rotation.set(0,0, pi/2);
+		gltf.scene.position.set(0,-2,0);
+		scene.add(gltf.scene);
+	}, undefined, function (error) {
+		console.error(error);
+	})
+}
+// create_stars()
+
+
+// ... Create Enemy on some Distance to each other ...
+// ... 
+function create_enemy(){
+	const enloader = new GLTFLoader();
+	enloader.load("../models/enemyspaceship2.glb",function (gltf) {
+		star_array.push(gltf);
+		console.log("Enemy : " + String(gltf));
+		gltf.scene.scale.set(0.2,0.2,0.2);
+		gltf.scene.rotation.set(pi/2,-pi/2, 0);
+		gltf.scene.position.set(0,-2,0);
+		scene.add(gltf.scene);
+	}, undefined, function (error) {
+		console.error(error);
+	})
+}
+// create_enemy()
+
 function animate() {
 	requestAnimationFrame(animate)
 	// playership.scene.position.y -= 0.01
-
+	// console.log(player_missiles.length)
+	for(i in  player_missiles){
+		// console.log("i : " + String(i))
+		player_missiles[i].scene.position.y += 0.05
+		// do this part later
+		// if(player_missiles[i].scene.position.y >playership.scene.position.y + 10){
+		// 	player_missiles.splice(i)
+		// }
+	}
 	renderer.render(scene, camera)
 }
 animate()
 
 function keyDownHandler(event) {
+	let height = window.innerHeight;
+	let width = window.innerWidth;
 	if (event.keyCode == 39) {
-		rightPressed = true;
-		position_matrix[0] += 0.1;
-		if (playership.scene.position.x < 6.7) {
+		if (playership.scene.position.x < width / 100) {
 			playership.scene.position.x += 0.1;
 		}
 	}
 	else if (event.keyCode == 37) {
-		leftPressed = true;
-		position_matrix[0] -= 0.1;
-		if (playership.scene.position.x > -6.7) {
+		if (playership.scene.position.x > -width / 100) {
 			playership.scene.position.x -= 0.1;
 		}
 	}
-	if (event.keyCode == 40) {
-		downPressed = true;
-		position_matrix[1] -= 0.1;
-		if (playership.scene.position.y > -3) {
+	else if (event.keyCode == 40) {
+		if (playership.scene.position.y > -height / 100) {
 			playership.scene.position.y -= 0.1
 		}
 	}
 	else if (event.keyCode == 38) {
-		upPressed = true;
-		position_matrix[1] += 0.1;
-		if(playership.scene.position.y<3){
-			playership.scene.position.y += 0.1
+		if (playership.scene.position.y < height / 100) {
+			playership.scene.position.y += 0.1;
+			// camera.position.y += 0.1;
+
 		}
 	}
-	console.log(position_matrix)
+	else if (event.keyCode == 32) {
+		create_missiles()
+	}
+	// else if (event.keyCode == 76) {
+	// 	// playership.scene.position.z = 10000;
+	// }
+	// console.log("playership.scene.position.x : " + String(playership.scene.position.x))
+	console.log("playership.scene.position.y : " + String(playership.scene.position.y))
+	console.log("window.innerHeight : " + String(window.innerHeight))
+	console.log("window.innerWidth : " + String(window.innerWidth))
 }
 
 function keyUpHandler(event) {
 	if (event.keyCode == 39) {
-		rightPressed = false;
 	}
 	else if (event.keyCode == 37) {
-		leftPressed = false;
 	}
 	if (event.keyCode == 40) {
-		downPressed = false;
 	}
 	else if (event.keyCode == 38) {
-		upPressed = false;
 	}
 }
