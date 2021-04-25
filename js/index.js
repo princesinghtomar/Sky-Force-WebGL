@@ -1,4 +1,7 @@
-// Some Important Variables and Functins
+// Some Important Variables and Functions
+Window_height = 943;
+Window_width = 1920;
+
 pi = Math.PI;
 document.addEventListener('keydown', keyDownHandler, false);
 document.addEventListener('keyup', keyUpHandler, false);
@@ -6,19 +9,20 @@ player_missiles = new Array();
 star_array = new Array();
 var health = 100;
 var score = 0;
+var rockets = 5;
 
 // var keys = {};
 // ... Later task to inprove to multiple key pressing ...
 
 // Scene + Camera + Renderer
 const scene = new THREE.Scene()
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
+const camera = new THREE.PerspectiveCamera(75, Window_width / Window_height, 0.1, 1000)
 const renderer = new THREE.WebGLRenderer({ antialias: true })
-renderer.setSize(window.innerWidth, window.innerHeight)
+renderer.setSize(Window_width, Window_height)
 // sets renderer background color
 renderer.setClearColor("#000000")
 document.body.appendChild(renderer.domElement)
-camera.position.z = 10
+camera.position.z = 50
 camera.position.y = -3
 
 // scene background 
@@ -38,7 +42,7 @@ const loader = new GLTFLoader();
 loader.load('../models/spaceship3.glb', function (gltf1) {
 	playership = gltf1;
 	console.log(playership);
-	gltf1.scene.position.set(0, -3, 0);
+	gltf1.scene.position.set(0, -10, 0);
 	gltf1.scene.rotation.set(pi / 2, pi / 2, 0);
 	gltf1.scene.scale.set(0.3, 0.3, 0.3);
 	scene.add(gltf1.scene);
@@ -115,40 +119,40 @@ function animate() {
 animate()
 
 function keyDownHandler(event) {
-	let height = window.innerHeight;
-	let width = window.innerWidth;
+	let height = Window_height;
+	let width = Window_width;
 	if (event.keyCode == 39) {
-		if (playership.scene.position.x < width / 100) {
-			playership.scene.position.x += 0.1;
+		if (playership.scene.position.x < 14.7) {
+			playership.scene.position.x += 0.2;
 		}
 	}
 	else if (event.keyCode == 37) {
-		if (playership.scene.position.x > -width / 100) {
-			playership.scene.position.x -= 0.1;
+		if (playership.scene.position.x > -14.7) {
+			playership.scene.position.x -= 0.2;
 		}
 	}
 	else if (event.keyCode == 40) {
-		if (playership.scene.position.y > -height / 100) {
-			playership.scene.position.y -= 0.1
+		if (playership.scene.position.y > -10) {
+			playership.scene.position.y -= 0.2;
 		}
 	}
 	else if (event.keyCode == 38) {
-		if (playership.scene.position.y < height / 100) {
-			playership.scene.position.y += 0.1;
+		if (playership.scene.position.y < 3.9) {
+			playership.scene.position.y += 0.2;
 			// camera.position.y += 0.1;
-
 		}
 	}
 	else if (event.keyCode == 32) {
+		rockets -= 1
 		create_missiles()
 	}
 	// else if (event.keyCode == 76) {
 	// 	// playership.scene.position.z = 10000;
 	// }
-	// console.log("playership.scene.position.x : " + String(playership.scene.position.x))
+	console.log("playership.scene.position.x : " + String(playership.scene.position.x))
 	console.log("playership.scene.position.y : " + String(playership.scene.position.y))
-	console.log("window.innerHeight : " + String(window.innerHeight))
-	console.log("window.innerWidth : " + String(window.innerWidth))
+	console.log("Window_height : " + String(Window_height))
+	console.log("Window_width : " + String(Window_width))
 }
 
 function keyUpHandler(event) {

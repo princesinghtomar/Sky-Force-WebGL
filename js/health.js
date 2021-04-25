@@ -53,16 +53,16 @@ function makecube() {
 }
 makecube()
 
-function removeCube() {
-
+function removeCube(index) {
+    healthArr[index].position.z = 100
+    healthArr.splice(index)
 }
 
 function keyDownHandler(event) {
     if (event.keyCode == 70) {
         if (health > 0) {
             health -= 1
-            healthArr[healthArr.length-1].position.z = 100
-            healthArr.splice(healthArr.length-1)
+            removeCube(healthArr.length-1)
         }
     }
     if(event.keyCode == 71){
