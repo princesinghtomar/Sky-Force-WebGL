@@ -1,13 +1,16 @@
+Window_height = 943;
+Window_width = 1920;
+
 pi = Math.PI;
 document.addEventListener('keydown', keyDownHandler, false);
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const camera = new THREE.PerspectiveCamera(75, Window_width / Window_height, 0.1, 1000);
 
-health = 5
+health = 10
 healthArr = new Array()
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setSize(Window_width, Window_height);
 document.body.appendChild(renderer.domElement);
 
 // const geometry = new THREE.BoxGeometry();

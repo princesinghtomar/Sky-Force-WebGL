@@ -25,16 +25,6 @@ camera.position.y = -3
 var texture = new THREE.TextureLoader().load( "textures/461223110.jpg" );
 scene.background = texture;
 
-// resize canvas on resize window
-window.addEventListener('resize', () => {
-	let width = window.innerWidth
-	let height = window.innerHeight
-	renderer.setSize(width, height)
-	camera.aspect = width / height
-	camera.updateProjectionMatrix()
-})
-console.log(renderer)
-
 // ambient light
 var ambientLight = new THREE.AmbientLight(0xff8000, 0.2)
 scene.add(ambientLight)
