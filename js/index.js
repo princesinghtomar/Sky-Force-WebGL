@@ -11,7 +11,8 @@ player_missiles = new Array();
 star_array = new Array();
 enemy1_array = new Array();
 enemy2_array = new Array();
-healthArr = new Array()
+healthArr = new Array();
+enemy_fire = new Array();
 var health = 10;
 var score = 0;
 var rockets = 10;
@@ -107,13 +108,13 @@ stars_func()
 function create_enemy(type, x, y) {
 	const enloader = new GLTFLoader();
 	var address_is = ""
-	if (type) {
+	if (type == 1) {
 		address_is = "../models/enemyspaceship.glb"
 	} else {
 		address_is = "../models/enemyspaceship2.glb"
 	}
 	enloader.load(address_is, function (gltf) {
-		if (type) {
+		if (type == 1) {
 			enemy1_array.push(gltf);
 		} else {
 			enemy2_array.push(gltf);
@@ -128,13 +129,13 @@ function create_enemy(type, x, y) {
 	})
 }
 // enemies
-create_enemy(1,0,0);
+create_enemy(0,0,0);
 create_enemy(1,-8.2,3.9);
 create_enemy(1,-2.3,11);
-create_enemy(0,3.2,19);
+create_enemy(1,3.2,19);
 create_enemy(1,-1.4,26);
 enemy1movearray = new Array([0.2,-0.2,0.2,-0.2]);
-enemy2movearray = new Array([0.2]);
+enemy2movearray = new Array([0.02]);
 
 function textload() {
 	var instance = new THREE.TextSprite({
@@ -196,6 +197,7 @@ function removeCube(index) {
 function calculate_dist(x1, y1, x2, y2) {
 	return Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2))
 }
+
 
 function animate() {
 	if (run[0]) {
@@ -300,6 +302,17 @@ function animate() {
 						score -= 20;
 					}
 				}
+				if(dist < 100) {
+					console.log(enemy2_array[j].scene.position.x)
+					enemy2_array[j].scene.position.x += parseFloat(enemy2movearray[0]);
+					console.log(enemy2_array[j].scene.position.x)
+					console.log(parseInt(enemy2movearray[0]))
+					if(enemy2_array[j].scene.position.x > 8 || enemy2_array[j].scene.position.x < -8){
+						enemy2movearray[0] = -enemy2movearray[0];
+					}
+				}
+				console.log(enemy2movearray)
+				console.log(enemy2_array)
 			}
 		}
 		// console.log(health)
