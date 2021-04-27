@@ -16,7 +16,8 @@ var health = 10;
 var score = 0;
 var rockets = 10;
 var game_speed = 0.02;
-var run = true
+var run = new Array()
+run.push(1)
 
 // var keys = {};
 // ... Later task to inprove to multiple key pressing ...
@@ -33,7 +34,8 @@ camera.position.z = 6 // after make it 6
 camera.position.y = -6
 
 // scene background 
-var texture = new THREE.TextureLoader().load("textures/461223110.jpg");
+var texture = new THREE.TextureLoader().load("textures/wp3493594.webp");
+// const video = new THREE.VideoTexture( texture );
 scene.background = texture;
 
 // ambient light
@@ -119,14 +121,20 @@ function create_enemy(type, x, y) {
 		// console.log("Enemy : " + String(gltf));
 		gltf.scene.scale.set(0.2, 0.2, 0.2);
 		gltf.scene.rotation.set(pi / 2, -pi / 2, 0);
-		gltf.scene.position.set(0, -2, 0);
+		gltf.scene.position.set(x, y, 0);
 		scene.add(gltf.scene);
 	}, undefined, function (error) {
 		console.error(error);
 	})
 }
 // enemies
-create_enemy(1)
+create_enemy(1,0,0);
+create_enemy(1,-8.2,3.9);
+create_enemy(1,-2.3,11);
+create_enemy(0,3.2,19);
+create_enemy(1,-1.4,26);
+enemy1movearray = new Array([0.2,-0.2,0.2,-0.2]);
+enemy2movearray = new Array([0.2]);
 
 function textload() {
 	var instance = new THREE.TextSprite({
@@ -154,7 +162,7 @@ text2.position.y = -1.45
 
 text3 = textload()
 text3.text = "Missiles : " + String(rockets)
-text3.position.x = 6
+text3.position.x = 8
 text3.position.y = -1.45
 
 function addCube() {
@@ -190,89 +198,151 @@ function calculate_dist(x1, y1, x2, y2) {
 }
 
 function animate() {
-	requestAnimationFrame(animate)
-	for (i in player_missiles) {
-		player_missiles[i].scene.position.y += 0.05
-		if (player_missiles[i].scene.position.y > playership.scene.position.y + 10 - 1.4) {
-			player_missiles[i].scene.position.z = 100
-		}
-	}
-	if (camera.position.y < 30 + 1.4) {
-		playership.scene.position.y += game_speed;
-		camera.position.y += game_speed;
-		text1.position.y += game_speed;
-		text2.position.y += game_speed;
-		text3.position.y += game_speed;
-		for (i in healthArr) {
-			healthArr[i].position.y += game_speed;
-		}
-	}
-	text3.text = "Missiles : " + String(rockets)
-	text2.text = "Score : " + String(score)
-	for (i in star_array) {
-		if (star_array[i].scene.position.z < 99) {
-			var dist = calculate_dist(
-				star_array[i].scene.position.x,
-				star_array[i].scene.position.y,
-				playership.scene.position.x,
-				playership.scene.position.y
-			)
-			if (dist < 1) {
-				star_array[i].scene.position.z = 100;
-				score += 100;
+	if (run[0]) {
+		requestAnimationFrame(animate)
+		for (i in player_missiles) {
+			player_missiles[i].scene.position.y += 0.05
+			if (player_missiles[i].scene.position.y > playership.scene.position.y + 10 - 1.4) {
+				player_missiles[i].scene.position.z = 100
 			}
 		}
-	}
-	for (i in player_missiles) {
-		if (player_missiles[i].scene.position.z < 99) {
-			for (j in enemy1_array) {
-				if (enemy1_array[j].scene.position.z < 99) {
-					var dist = calculate_dist(
-						player_missiles[i].scene.position.x,
-						player_missiles[i].scene.position.y,
-						enemy1_array[j].scene.position.x,
-						enemy1_array[j].scene.position.y
-					);
-					if (dist < 0.5) {
-						enemy1_array[j].scene.position.z = 100;
-						player_missiles[i].scene.position.z = 100;
-						score += 50;
+		if (camera.position.y < 30 + 1.4) {
+			playership.scene.position.y += game_speed;
+			camera.position.y += game_speed;
+			text1.position.y += game_speed;
+			text2.position.y += game_speed;
+			text3.position.y += game_speed;
+			for (i in healthArr) {
+				healthArr[i].position.y += game_speed;
+			}
+		}
+		text3.text = "Missiles : " + String(rockets)
+		text2.text = "Score : " + String(score)
+		for (i in star_array) {
+			if (star_array[i].scene.position.z < 99) {
+				var dist = calculate_dist(
+					star_array[i].scene.position.x,
+					star_array[i].scene.position.y,
+					playership.scene.position.x,
+					playership.scene.position.y
+				)
+				if (dist < 1) {
+					star_array[i].scene.position.z = 100;
+					score += 100;
+				}
+			}
+		}
+		for (i in player_missiles) {
+			if (player_missiles[i].scene.position.z < 99) {
+				for (j in enemy1_array) {
+					if (enemy1_array[j].scene.position.z < 99) {
+						var dist = calculate_dist(
+							player_missiles[i].scene.position.x,
+							player_missiles[i].scene.position.y,
+							enemy1_array[j].scene.position.x,
+							enemy1_array[j].scene.position.y
+						);
+						if (dist < 0.5) {
+							enemy1_array[j].scene.position.z = 100;
+							player_missiles[i].scene.position.z = 100;
+							score += 50;
+						}
+					}
+				}
+				for (j in enemy2_array) {
+					if (enemy2_array[j].scene.position.z < 99) {
+						var dist = calculate_dist(
+							player_missiles[i].scene.position.x,
+							player_missiles[i].scene.position.y,
+							enemy2_array[j].scene.position.x,
+							enemy2_array[j].scene.position.y
+						);
+						if (dist < 0.5) {
+							enemy2_array[j].scene.position.z = 100;
+							player_missiles[i].scene.position.z = 100;
+							score += 50;
+						}
 					}
 				}
 			}
 		}
-	}
-	for (j in enemy1_array) {
-		if (enemy1_array[j].scene.position.z < 99) {
-			var dist = calculate_dist(
-				enemy1_array[j].scene.position.x,
-				enemy1_array[j].scene.position.y,
-				playership.scene.position.x,
-				playership.scene.position.y
-			);
-			if (dist < 1) {
-				if (health > 0) {
-					health -= 1;
-					removeCube(healthArr.length - 1);
-					enemy1_array[j].scene.position.z = 100;
-					score -= 20;
+		for (j in enemy1_array) {
+			if (enemy1_array[j].scene.position.z < 99) {
+				var dist = calculate_dist(
+					enemy1_array[j].scene.position.x,
+					enemy1_array[j].scene.position.y,
+					playership.scene.position.x,
+					playership.scene.position.y
+				);
+				if (dist < 1) {
+					if (health > 0) {
+						health -= 1;
+						removeCube(healthArr.length - 1);
+						enemy1_array[j].scene.position.z = 100;
+						score -= 20;
+					}
 				}
 			}
 		}
+		for (j in enemy2_array) {
+			if (enemy2_array[j].scene.position.z < 99) {
+				var dist = calculate_dist(
+					enemy2_array[j].scene.position.x,
+					enemy2_array[j].scene.position.y,
+					playership.scene.position.x,
+					playership.scene.position.y
+				);
+				if (dist < 1) {
+					if (health > 0) {
+						health -= 1;
+						removeCube(healthArr.length - 1);
+						enemy2_array[j].scene.position.z = 100;
+						score -= 20;
+					}
+				}
+			}
+		}
+		// console.log(health)
+		if (health <= 0) {
+			// Game Over
+			text5 = textload();
+			text5.text = [
+				"Game Over You lost",
+				"Press F5 to Restart Game"
+			].join('\n');
+			text5.position.x = -4;
+			text5.position.y = playership.scene.position.y + 1;
+			playership.scene.position.y = 100;
+			run[0] = 0;
+		}
+		else if(playership.scene.position.y >= 30 && health > 0){
+			// player Win
+			text5 = textload();
+			text5.text = [
+				"You Won",
+			].join('\n');
+			text5.position.x = -4;
+			text5.position.y = playership.scene.position.y + 1;
+			playership.scene.position.y = 100
+			run[0] = 0;
+		}
 	}
-	// if(health < 0){
-	// 	// Game Over
-	//	run = false
-	// 	return
-	// }
-	// if(playership.scene.position.y >= 30 && health > 0){
-	// 	// player Win
-	//	run = false
-	// 	return
-	// }
+	else {
+		text5 = textload();
+		text5.text = [
+			"Game Over You lost",
+			"Press F5 to Restart Game"
+		].join('\n')
+		text5.position.x = -4;
+		text5.position.y = playership.scene.position.y + 1;
+		playership.scene.position.y = 100
+		run[0] = 0;
+	}
 	renderer.render(scene, camera);
+	// console.log(run)
 }
 animate();
+console.log(run)
 
 function keyDownHandler(event) {
 	let height = Window_height;
@@ -293,9 +363,8 @@ function keyDownHandler(event) {
 		}
 	}
 	else if (event.keyCode == 38) {
-		if (playership.scene.position.y < -2.4 + camera.position.y + 6) {
+		if (playership.scene.position.y < -2.2 + camera.position.y + 6) {
 			playership.scene.position.y += 0.2;
-			// camera.position.y += 0.1;
 		}
 	}
 	else if (event.keyCode == 32) {
