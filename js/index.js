@@ -3,7 +3,7 @@ Window_height = 943;
 Window_width = 1920;
 
 game_length = 31 - (-10)
-
+// ptime = [new Date().getTime()]
 pi = Math.PI;
 document.addEventListener('keydown', keyDownHandler, false);
 document.addEventListener('keyup', keyUpHandler, false);
@@ -12,7 +12,7 @@ star_array = new Array();
 enemy1_array = new Array();
 enemy2_array = new Array();
 healthArr = new Array();
-enemy_fire = new Array();
+enemy_laser = new Array();
 var health = 10;
 var score = 0;
 var rockets = 10;
@@ -77,6 +77,21 @@ function create_missiles() {
 	});
 }
 
+function create_laser(x, y) {
+	const pmloader = new GLTFLoader();
+	pmloader.load('../models/laser.glb', function (gltf) {
+		enemy_laser.push(gltf);
+		console.log("Palyer Laser : ", gltf);
+		gltf.scene.position.set(x, y - 0.2, 0);
+		gltf.scene.rotation.set(0, 0, pi / 2);
+		gltf.scene.scale.set(0.2, 0.2, 0.2);
+		scene.add(gltf.scene);
+	}, undefined, function (error) {
+		console.error(error);
+	});
+}
+// create_laser(0,-2.2)
+
 // ... Change stars model ... 
 // ... Make Stars appear after Killing of an Enemy ...
 function create_stars(x, y) {
@@ -129,13 +144,13 @@ function create_enemy(type, x, y) {
 	})
 }
 // enemies
-create_enemy(0,0,0);
-create_enemy(1,-8.2,3.9);
-create_enemy(1,-2.3,11);
-create_enemy(1,3.2,19);
-create_enemy(1,-1.4,26);
-enemy1movearray = new Array([0.2,-0.2,0.2,-0.2]);
-enemy2movearray = new Array([0.02]);
+create_enemy(0, 0, 0);
+create_enemy(1, -8.2, 3.9);
+create_enemy(0, -2.3, 11);
+create_enemy(1, 3.2, 19);
+create_enemy(1, -1.4, 26);
+enemy1movearray = new Array([0.2, -0.2, 0.2, -0.2]);
+enemy2movearray = new Array([0.05]);
 
 function textload() {
 	var instance = new THREE.TextSprite({
@@ -287,6 +302,7 @@ function animate() {
 			}
 		}
 		for (j in enemy2_array) {
+			ptime = new Date().getTime()
 			if (enemy2_array[j].scene.position.z < 99) {
 				var dist = calculate_dist(
 					enemy2_array[j].scene.position.x,
@@ -302,19 +318,46 @@ function animate() {
 						score -= 20;
 					}
 				}
-				if(dist < 100) {
+				if (dist < 100) {
 					console.log(enemy2_array[j].scene.position.x)
 					enemy2_array[j].scene.position.x += parseFloat(enemy2movearray[0]);
 					console.log(enemy2_array[j].scene.position.x)
 					console.log(parseInt(enemy2movearray[0]))
-					if(enemy2_array[j].scene.position.x > 8 || enemy2_array[j].scene.position.x < -8){
+					if (enemy2_array[j].scene.position.x > 8 || enemy2_array[j].scene.position.x < -8) {
 						enemy2movearray[0] = -enemy2movearray[0];
 					}
+					var d = new Date();
+					var time = d.getTime();
+					if (parseFloat(time - ptime) > 5) {
+						create_laser(enemy2_array[j].scene.position.x, enemy2_array[j].scene.position.y)
+						console.log(time)
+						console.log(ptime)
+						ptime = time;
+							console.log(time)
+							console.log(ptime)
+					}
 				}
-				console.log(enemy2movearray)
-				console.log(enemy2_array)
 			}
 		}
+		for (j in enemy_laser) {
+			if(enemy_laser[j].scene.position.z < 99){
+			var dist = calculate_dist(
+				enemy_laser[j].scene.position.x,
+				enemy_laser[j].scene.position.y,
+				playership.scene.position.x,
+				playership.scene.position.y
+			);
+			if (dist < 1) {
+				// enemy_laser[j].scene.position.z = 100;
+				if (health > 0) {
+					health -= 1;
+					removeCube(healthArr.length - 1);
+					enemy_laser[j].scene.position.z = 100;
+					score -= 20;
+				}
+			}
+		}
+	}
 		// console.log(health)
 		if (health <= 0) {
 			// Game Over
@@ -328,7 +371,7 @@ function animate() {
 			playership.scene.position.y = 100;
 			run[0] = 0;
 		}
-		else if(playership.scene.position.y >= 30 && health > 0){
+		else if (playership.scene.position.y >= 30 && health > 0) {
 			// player Win
 			text5 = textload();
 			text5.text = [
