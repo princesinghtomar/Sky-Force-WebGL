@@ -16,6 +16,7 @@ var health = 10;
 var score = 0;
 var rockets = 5;
 var game_speed = 0.02;
+var run = true
 
 // var keys = {};
 // ... Later task to inprove to multiple key pressing ...
@@ -127,6 +128,30 @@ function create_enemy(type,x,y) {
 // enemies
 create_enemy(1)
 
+function textload() {
+    var instance = new THREE.TextSprite({
+        alignment: 'left',
+        color: '#00ff00',
+        fontFamily: '"Times New Roman", Times, serif',
+        fontSize: 0.4,
+        fontStyle: 'bold',
+        text: [
+            'Life :'
+        ].join('\n'),
+    });
+    scene.add(instance);
+    return instance;
+}
+
+text1 = textload()
+text1.position.x = -8.8
+text1.position.y = -1.45
+
+text2 = textload()
+text2.text = "Score : " + String(score)
+text2.position.x = 0
+text2.position.y = -1.45
+
 function addCube() {
     const geometry = new THREE.BoxGeometry();
     const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
@@ -134,11 +159,11 @@ function addCube() {
     
     cube.scale.set(0.1,0.1,0.1)
     if (healthArr.length == 0) {
-        cube.position.set(-8.6, -1.5, 0)
+        cube.position.set(-8.1, -1.6, 0)
     }
     else {
         cube.position.x += healthArr[healthArr.length-1].position.x + 0.2
-		cube.position.y = -1.5
+		cube.position.y = -1.6
     }
     healthArr.push(cube)
     scene.add(cube);
@@ -166,10 +191,13 @@ function animate() {
 	if(camera.position.y < 30 + 1.4){
 		playership.scene.position.y += game_speed;
 		camera.position.y += game_speed;
+		text1.position.y += game_speed
+		text2.position.y += game_speed
 		for( i in healthArr){
 			healthArr[i].position.y += game_speed;
 		}
 	}
+	text2.text = "Score : " + String(score)
 	// if(health < 0){
 	// 	// Game Over
 	// 	return
