@@ -7,7 +7,7 @@
 
 - Controls :
     - Arrow keys to move up/down/left/right
-    - Spacebar ro fire missiles
+    - Spacebar to fire missiles
 
 - Points System :
     - Collecting Gems += 100 points
