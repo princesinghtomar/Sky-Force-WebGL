@@ -5,4 +5,15 @@
     - After live server open that port in browser
     - Internet connection is required since some resources are present online
 
-> Nothing else to say :)
+- Controls :
+    - Arrow keys to move up/down/left/right
+    - Spacebar ro fire missiles
+
+- Points System :
+    - Collecting Gems += 100 points
+    - Hiting Enemy with Missiles += 50
+    - Hit by Enemy laser -= 20 
+    - Hit by Enemy -= 20
+
+## ScreenShot
+![plot](./ScreenShot/game.png)
